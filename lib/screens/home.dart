@@ -1,20 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onellapp2/constants.dart' as constants;
+import 'package:complete_timer/complete_timer.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -23,8 +17,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int intFood = 0;
+  int _intFood = 0;
   int intShower = 0;
+  int _intShower = 0;
   int intSleep = 0;
+  int _intSleep = 0;
+  final box = GetStorage();
 
   void _incrementCounter() {
     setState(() {
@@ -32,22 +30,55 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _initState() {
+    _intFood = box.read(constants.food);
+    _intShower = box.read(constants.shower);
+    _intSleep = box.read(constants.sleep);
+
+    box.listenKey(constants.shower, (value){
+      setState(() {
+        _intShower = value;
+      });
+    });
+
+    box.listenKey(constants.sleep, (value){
+      setState(() {
+        _intSleep = value;
+      });
+    });
+  }
+
   void _addFood() {
-    final box = GetStorage();
     intFood = box.read(constants.food);
     intFood++;
     box.write(constants.food, intFood);
+
+    setState(() {
+      _intFood = intFood;
+    });
+  }
+
+  void _pullAllNeed() {
+    intFood = box.read(constants.food);
+    intFood = intFood - 3;
+    box.write(constants.food, intFood);
+
+    intShower = box.read(constants.shower);
+    intShower = intShower - 2;
+    box.write(constants.shower, intShower);
+
+    intSleep = box.read(constants.sleep);
+    intSleep = intSleep - 1;
+    box.write(constants.sleep, intSleep);
   }
 
   void _addShower() {
-    final box = GetStorage();
     intShower = box.read(constants.shower);
     intShower++;
     box.write(constants.shower, intShower);
   }
 
   void _addSleep() {
-    final box = GetStorage();
     intSleep = box.read(constants.sleep);
     intSleep++;
     box.write(constants.sleep, intSleep);
@@ -55,6 +86,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    _initState();
+
+    final CompleteTimer timer = CompleteTimer(
+        duration: const Duration(seconds: 5), //prod : minutes: 5 & dev : seconds: 5
+        periodic: true,
+        autoStart: true,
+        callback: (timer) {
+          _pullAllNeed();
+          timer.stop();
+        }
+    );
+
+    timer.stop();
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -78,26 +124,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: <Widget>[
                     ElevatedButton(
                       onPressed: () { _addShower(); },
-                      child: const Text('SHOWER'),
+                      child: Text('SHOWER : ' + _intShower.toString()),
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(40),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () { _addFood(); },
-                      child: const Text('FOOD'),
+                      child: Text('FOOD : '  + _intFood.toString()),
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(40),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () { _addSleep(); },
-                      child: const Text('SLEEP'),
+                      child: Text('SLEEP : '  + _intSleep.toString()),
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(40),
                       ),
                     )
                 ],

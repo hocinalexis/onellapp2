@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  complete_timer:
+    dependency: "direct main"
+    description:
+      name: complete_timer
+      sha256: "81ff6c3b127140eed8a7d25bf90be33987957b13619edce70cc40a2cc9f0af7c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   cupertino_icons:
     dependency: "direct main"
     description:
