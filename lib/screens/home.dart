@@ -4,6 +4,7 @@ import 'package:rive/rive.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onellapp2/constants.dart' as constants;
 import 'package:complete_timer/complete_timer.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -101,6 +102,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     timer.stop();
 
+    progressColor(int intBesoin) {
+      if (intBesoin >= 33 && intBesoin < 66) {
+        return Colors.orange;
+      }
+      if(intBesoin >= 66){
+        return Colors.green;
+      }
+      else{
+        return Colors.red;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -122,30 +135,51 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () { _addShower(); },
-                      child: Text('SHOWER : ' + _intShower.toString()),
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(40),
+                    CircularPercentIndicator(
+                      radius: 70,
+                      lineWidth: 15,
+                      percent: _intShower <= 0 ? 0 : _intShower.toDouble()/100,
+                      animationDuration: 1500,
+                      progressColor: progressColor(_intShower),
+                      center: ElevatedButton(
+                        onPressed: () { _addShower(); },
+                        child: Text('SHOWER : ' + _intShower.toString()),
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(40),
+                        ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () { _addFood(); },
-                      child: Text('FOOD : '  + _intFood.toString()),
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(40),
+                    CircularPercentIndicator(
+                      radius: 70,
+                      lineWidth: 15,
+                      percent: _intFood <= 0 ? 0 : _intFood.toDouble()/100,
+                      animationDuration: 1500,
+                      progressColor: progressColor(_intFood),
+                      center: ElevatedButton(
+                        onPressed: () { _addFood(); },
+                        child: Text('FOOD : '  + _intFood.toString()),
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(40),
+                        ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () { _addSleep(); },
-                      child: Text('SLEEP : '  + _intSleep.toString()),
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(40),
+                    CircularPercentIndicator(
+                      radius: 70,
+                      lineWidth: 15,
+                      percent: _intSleep <= 0 ? 0 : _intSleep.toDouble()/100,
+                      animationDuration: 1500,
+                      progressColor: progressColor(_intSleep),
+                      center: ElevatedButton(
+                        onPressed: () { _addSleep(); },
+                        child: Text('SLEEP : '  + _intSleep.toString()),
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(40),
+                        ),
                       ),
-                    )
+                    ),
                 ],
               ),
             ),
