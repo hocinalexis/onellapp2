@@ -36,7 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   rive: ^0.10.3
   get_storage: ^2.1.1
-  complete_timer: ^1.0.0
   percent_indicator: ^4.2.3
 
 dev_dependencies:

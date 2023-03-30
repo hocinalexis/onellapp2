@@ -1,9 +1,9 @@
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onellapp2/constants.dart' as constants;
-import 'package:complete_timer/complete_timer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -24,17 +24,23 @@ class _MyHomePageState extends State<MyHomePage> {
   int intSleep = 0;
   int _intSleep = 0;
   final box = GetStorage();
+  bool isStopped = false;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  @override
+  initState() {
+    super.initState();
 
-  void _initState() {
+    sec5Timer();
+
     _intFood = box.read(constants.food);
     _intShower = box.read(constants.shower);
     _intSleep = box.read(constants.sleep);
+
+    box.listenKey(constants.food, (value){
+      setState(() {
+        _intFood = value;
+      });
+    });
 
     box.listenKey(constants.shower, (value){
       setState(() {
@@ -46,6 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _intSleep = value;
       });
+    });
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
     });
   }
 
@@ -77,30 +89,33 @@ class _MyHomePageState extends State<MyHomePage> {
     intShower = box.read(constants.shower);
     intShower++;
     box.write(constants.shower, intShower);
+
+    setState(() {
+      _intShower = intShower;
+    });
   }
 
   void _addSleep() {
     intSleep = box.read(constants.sleep);
     intSleep++;
     box.write(constants.sleep, intSleep);
+
+    setState(() {
+      _intSleep = intSleep;
+    });
+  }
+
+  sec5Timer() {
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      if (isStopped) {
+        timer.cancel();
+      }
+      _pullAllNeed();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    _initState();
-
-    final CompleteTimer timer = CompleteTimer(
-        duration: const Duration(seconds: 5), //prod : minutes: 5 & dev : seconds: 5
-        periodic: true,
-        autoStart: true,
-        callback: (timer) {
-          _pullAllNeed();
-          timer.stop();
-        }
-    );
-
-    timer.stop();
 
     progressColor(int intBesoin) {
       if (intBesoin >= 33 && intBesoin < 66) {
