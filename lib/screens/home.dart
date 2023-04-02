@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
@@ -10,13 +9,11 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int intFood = 0;
   int _intFood = 0;
   int intShower = 0;
@@ -36,28 +33,22 @@ class _MyHomePageState extends State<MyHomePage> {
     _intShower = box.read(constants.shower);
     _intSleep = box.read(constants.sleep);
 
-    box.listenKey(constants.food, (value){
+    box.listenKey(constants.food, (value) {
       setState(() {
         _intFood = value;
       });
     });
 
-    box.listenKey(constants.shower, (value){
+    box.listenKey(constants.shower, (value) {
       setState(() {
         _intShower = value;
       });
     });
 
-    box.listenKey(constants.sleep, (value){
+    box.listenKey(constants.sleep, (value) {
       setState(() {
         _intSleep = value;
       });
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
     });
   }
 
@@ -106,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   sec5Timer() {
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
       if (isStopped) {
         timer.cancel();
       }
@@ -116,15 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     progressColor(int intBesoin) {
       if (intBesoin >= 33 && intBesoin < 66) {
         return Colors.orange;
       }
-      if(intBesoin >= 66){
+      if (intBesoin >= 66) {
         return Colors.green;
-      }
-      else{
+      } else {
         return Colors.red;
       }
     }
@@ -144,20 +133,23 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 200,
               child: RiveAnimation.asset('assets/test_oeil_v2.riv'),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child:
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CircularPercentIndicator(
-                      radius: 70,
-                      lineWidth: 15,
-                      percent: _intShower <= 0 ? 0 : _intShower.toDouble()/100,
+                      radius: 60,
+                      lineWidth: 10,
+                      percent:
+                          _intShower <= 0 ? 0 : _intShower.toDouble() / 100,
                       animationDuration: 1500,
                       progressColor: progressColor(_intShower),
                       center: ElevatedButton(
-                        onPressed: () { _addShower(); },
+                        onPressed: () {
+                          _addShower();
+                        },
                         child: Text('SHOWER : ' + _intShower.toString()),
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
@@ -165,47 +157,50 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    CircularPercentIndicator(
-                      radius: 70,
-                      lineWidth: 15,
-                      percent: _intFood <= 0 ? 0 : _intFood.toDouble()/100,
-                      animationDuration: 1500,
-                      progressColor: progressColor(_intFood),
-                      center: ElevatedButton(
-                        onPressed: () { _addFood(); },
-                        child: Text('FOOD : '  + _intFood.toString()),
-                        style: ElevatedButton.styleFrom(
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(40),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 30),
+                      child: CircularPercentIndicator(
+                        radius: 60,
+                        lineWidth: 10,
+                        percent: _intFood <= 0 ? 0 : _intFood.toDouble() / 100,
+                        animationDuration: 1500,
+                        progressColor: progressColor(_intFood),
+                        center: ElevatedButton(
+                          onPressed: () {
+                            _addFood();
+                          },
+                          child: Text('FOOD : ' + _intFood.toString()),
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(40),
+                          ),
                         ),
                       ),
                     ),
                     CircularPercentIndicator(
-                      radius: 70,
-                      lineWidth: 15,
-                      percent: _intSleep <= 0 ? 0 : _intSleep.toDouble()/100,
+                      radius: 60,
+                      lineWidth: 10,
+                      percent: _intSleep <= 0 ? 0 : _intSleep.toDouble() / 100,
                       animationDuration: 1500,
                       progressColor: progressColor(_intSleep),
                       center: ElevatedButton(
-                        onPressed: () { _addSleep(); },
-                        child: Text('SLEEP : '  + _intSleep.toString()),
+                        onPressed: () {
+                          _addSleep();
+                        },
+                        child: Text('SLEEP : ' + _intSleep.toString()),
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(40),
                         ),
                       ),
                     ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
