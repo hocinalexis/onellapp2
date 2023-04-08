@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:onellapp2/constants.dart' as constants;
+import 'package:onellapp2/utils/constants.dart' as constants;
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:go_router/go_router.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -29,71 +30,79 @@ class _MyHomePageState extends State<MyHomePage> {
 
     sec5Timer();
 
-    _intFood = box.read(constants.food);
-    _intShower = box.read(constants.shower);
-    _intSleep = box.read(constants.sleep);
+    _intFood = box.read(constants.food) >= 0 ? box.read(constants.food) : 0;
+    _intShower = box.read(constants.shower) >= 0 ? box.read(constants.shower) : 0;
+    _intSleep = box.read(constants.sleep) >= 0 ? box.read(constants.sleep) : 0;
 
     box.listenKey(constants.food, (value) {
       setState(() {
-        _intFood = value;
+        _intFood = value >= 0 ? value : 0;
       });
     });
 
     box.listenKey(constants.shower, (value) {
       setState(() {
-        _intShower = value;
+        _intShower = value >= 0 ? value : 0;
       });
     });
 
     box.listenKey(constants.sleep, (value) {
       setState(() {
-        _intSleep = value;
+        _intSleep = value >= 0 ? value : 0;
       });
     });
   }
 
   void _addFood() {
     intFood = box.read(constants.food);
-    intFood++;
-    box.write(constants.food, intFood);
+    if (intFood < 100) {
+      intFood++;
+      box.write(constants.food, intFood);
 
-    setState(() {
-      _intFood = intFood;
-    });
+      setState(() {
+        _intFood = intFood;
+      });
+    }
   }
 
   void _pullAllNeed() {
     intFood = box.read(constants.food);
-    intFood = intFood - 3;
+    intFood = intFood - 3 <= 0 ? 0 : intFood - 3;
     box.write(constants.food, intFood);
 
     intShower = box.read(constants.shower);
-    intShower = intShower - 2;
+    intShower = intShower - 2 <= 0 ? 0 : intShower - 2;
     box.write(constants.shower, intShower);
 
     intSleep = box.read(constants.sleep);
-    intSleep = intSleep - 1;
+    intSleep = intSleep - 1 <= 0 ? 0 : intSleep - 1;
     box.write(constants.sleep, intSleep);
+    //go
   }
 
   void _addShower() {
     intShower = box.read(constants.shower);
-    intShower++;
-    box.write(constants.shower, intShower);
+    if (intShower < 100) {
+      intShower++;
+      box.write(constants.shower, intShower);
 
-    setState(() {
-      _intShower = intShower;
-    });
+      setState(() {
+        _intShower = intShower;
+      });
+    }
   }
 
   void _addSleep() {
     intSleep = box.read(constants.sleep);
-    intSleep++;
-    box.write(constants.sleep, intSleep);
 
-    setState(() {
-      _intSleep = intSleep;
-    });
+    if (intSleep < 100) {
+      intSleep++;
+      box.write(constants.sleep, intSleep);
+
+      setState(() {
+        _intSleep = intSleep;
+      });
+    }
   }
 
   sec5Timer() {
@@ -123,6 +132,15 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Informations et réglages',
+            onPressed: () {
+              context.go('/settings');
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
