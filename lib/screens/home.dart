@@ -53,14 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _addFood() {
-    intFood = box.read(constants.food);
-    if (intFood < 100) {
-      intFood++;
-      box.write(constants.food, intFood);
+  void _addBesoins(int _besoinState, String constant) {
+    int intbesoin = 0;
+    intbesoin = box.read(constant);
+    if (intbesoin < 100) {
+      intbesoin++;
+      box.write(constant, intbesoin);
 
       setState(() {
-        _intFood = intFood;
+        _besoinState = intbesoin;
       });
     }
   }
@@ -78,31 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
     intSleep = intSleep - 1 <= 0 ? 0 : intSleep - 1;
     box.write(constants.sleep, intSleep);
     //go
-  }
-
-  void _addShower() {
-    intShower = box.read(constants.shower);
-    if (intShower < 100) {
-      intShower++;
-      box.write(constants.shower, intShower);
-
-      setState(() {
-        _intShower = intShower;
-      });
-    }
-  }
-
-  void _addSleep() {
-    intSleep = box.read(constants.sleep);
-
-    if (intSleep < 100) {
-      intSleep++;
-      box.write(constants.sleep, intSleep);
-
-      setState(() {
-        _intSleep = intSleep;
-      });
-    }
   }
 
   sec5Timer() {
@@ -166,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       progressColor: progressColor(_intShower),
                       center: ElevatedButton(
                         onPressed: () {
-                          _addShower();
+                          _addBesoins(_intShower, constants.shower);
                         },
                         child: Text('SHOWER : ' + _intShower.toString()),
                         style: ElevatedButton.styleFrom(
@@ -185,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         progressColor: progressColor(_intFood),
                         center: ElevatedButton(
                           onPressed: () {
-                            _addFood();
+                            _addBesoins(_intFood, constants.food);
                           },
                           child: Text('FOOD : ' + _intFood.toString()),
                           style: ElevatedButton.styleFrom(
@@ -203,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       progressColor: progressColor(_intSleep),
                       center: ElevatedButton(
                         onPressed: () {
-                          _addSleep();
+                          _addBesoins(_intSleep, constants.sleep);
                         },
                         child: Text('SLEEP : ' + _intSleep.toString()),
                         style: ElevatedButton.styleFrom(
