@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onellapp2/utils/constants.dart' as constants;
 import 'package:percent_indicator/percent_indicator.dart';
@@ -23,10 +22,15 @@ class _MyHomePageState extends State<MyHomePage> {
   int _intSleep = 0;
   final box = GetStorage();
   bool isStopped = false;
+  String _stringAskIA = '';
 
   @override
   initState() {
     super.initState();
+
+    setState(() {
+      _stringAskIA = 'Comment vas-tu aujourd''hui ?';
+    });
 
     sec5Timer();
 
@@ -122,11 +126,19 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(
+            TweenAnimationBuilder<int>(
+              duration: const Duration(seconds: 3),
+              tween: IntTween(begin: 0, end: _stringAskIA.length),
+              builder: (context, value, child) {
+                return Text(
+                    _stringAskIA.substring(0, value));
+              },
+            ),
+            /*const SizedBox(
               height: 200,
               width: 200,
               child: RiveAnimation.asset('assets/test_oeil_v2.riv'),
-            ),
+            ),*/
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -136,8 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     CircularPercentIndicator(
                       radius: 60,
                       lineWidth: 10,
-                      percent:
-                          _intShower <= 0 ? 0 : _intShower.toDouble() / 100,
+                      percent: _intShower <= 0 ? 0 : _intShower.toDouble() / 100,
                       animationDuration: 1500,
                       progressColor: progressColor(_intShower),
                       center: ElevatedButton(
@@ -196,5 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+
   }
 }
